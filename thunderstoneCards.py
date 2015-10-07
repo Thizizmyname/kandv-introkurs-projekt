@@ -15,21 +15,17 @@ heroes = [
         ('Thyrian', ['fighter'], [], False, False)
         ]
 
+
 monsters = [
-    ('Doomknight - Humanoid', ['Doomknight', 'Humanoid'], ['fighter'], False, False),
-    ('Undead - Spirit', ['Undead', 'Spirit'], ['magicAtk'], False, False),   # OBS kolla upp magicAtk-dependency
-    ('Undead - Doom', ['Undead', 'Doom'], ['spell'], False, True), 
-    ('Dragon', ['dragon'], ['magicAtk'], False, False),
-    ('Abyssal', ['abyssal'], ['magicAtk', 'cleric'], False, True),
-    ('Humanoid', ['humanoid'], [], False, True),
-    ('Ooze', ['ooze'], ['magicAtk'], False, False),
-    ('Enchanted', ['enchanted'], ['magicAtk'], False, False)
-    ]
-
-
-
-
-]
+        ('Doomknight - Humanoid', ['Doomknight', 'Humanoid'], ['fighter'], False, False),
+        ('Undead - Spirit', ['Undead', 'Spirit'], ['magicAtk'], False, False),   # OBS kolla upp magicAtk-dependency
+        ('Undead - Doom', ['Undead', 'Doom'], ['spell'], False, True), 
+        ('Dragon', ['dragon'], ['magicAtk'], False, False),
+        ('Abyssal', ['abyssal'], ['magicAtk', 'cleric'], False, True),
+        ('Humanoid', ['humanoid'], [], False, True),
+        ('Ooze', ['ooze'], ['magicAtk'], False, False),
+        ('Enchanted', ['enchanted'], ['magicAtk'], False, False)
+        ]
 
 
 villagers = [
