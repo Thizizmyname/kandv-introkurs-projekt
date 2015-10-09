@@ -49,3 +49,60 @@ villagers = [
         ('Warhammer', ['weapon', 'blunt'], [], False, False),
         ('Polearm', ['weapon', 'edged'], [], False, False)
         ]
+
+CARDTYPE = 1
+CARDMAGICATK = 3
+CARDDISEASE = 4
+    
+
+
+def depchk(dep, cards):
+    
+    """
+    dep = dependency (string)
+    cards = list of tupels
+
+    Controls if dependency is satisfied by the list of selected cards
+    Returns : bool, true if all dependencies are met in any of the cards
+    """
+
+
+
+
+    if dep == 'fighter' or dep == 'cleric' or dep == 'spell':
+        # se om något kort är av typ 'fighter' från lista
+        for card in cards:
+            if dep in cards(CARDTYPE):
+                return True
+        
+        
+    elif dep == 'magicAtk':
+        # se om något kort innehåller boolen magicAtk == True
+        for card in cards:
+            if cards(CARDMAGICATK):
+                return True
+
+    elif dep == 'disease'
+        # se om något kort innehåller boolen disease == True
+        for card in cards:
+            if cards(CARDDISEASE):
+                return True
+
+
+
+
+
+
+"""
+construct selection
+input lists (of monsters, heroes and villagers)
+output object (with the randomized selected cards
+
+check if valid
+input (self)
+output bool (if selected cards are an acceptable choice)
+
+if bool
+    contine program (display choice)
+else
+    redo selection
