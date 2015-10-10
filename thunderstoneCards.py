@@ -98,6 +98,9 @@ def getSelection(m = set([]), h = set([]), v = set([])):
 
 
 # Class = [(cardname, [list of type], [list of dependencies], Have:magicAtk, Give:Disease)]
+# if card have an "either-or" dependency, make it as a list
+# Example: "Each player gains one disease unless they reveal a cleric or thief"
+# WARNING: works only with type, not Have:magicAtk or Give:Disease
 
 
 heroes = set([
@@ -163,9 +166,15 @@ def depchk(dep, cards):
     """
 
 
+    if isinstance(dep, list):
+        # se om dep är en lista (vilket härleder en "either or-dependency")
+        # kollar sedan om något av kriterierna blir bemötta.
+        for card in cards:
+            for indvdep in dep
+                if indvdep in cards(CARDTYPE):
+                    return True
 
-
-    if dep == 'fighter' or dep == 'cleric' or dep == 'spell':
+    elif dep == 'fighter' or dep == 'cleric' or dep == 'spell':
         # se om något kort är av typ 'fighter' från lista
         for card in cards:
             if dep in cards(CARDTYPE):
