@@ -12,12 +12,16 @@ import random
 MONSTER_AMOUNT = 3
 HERO_AMOUNT = 4
 VILLAGE_AMOUNT = 8
+
 CARD_NAME = 0
 CARD_TYPE = 1
 CARD_DEPENDENCIES = 2
 CARD_MAGIC_ATK = 3
 CARD_DISEASE = 4
+
 MAX_TRIES = 1000
+
+EMPTY_SELECTOR = ClassSelector(set([]), set([]))
 
 
 class Selection(object):
@@ -92,7 +96,10 @@ def selectionHelper(subset, superset, length):
     return subset
 
 
-def getSelection(m=set([]), h=set([]), v=set([]), maxTries=MAX_TRIES):
+def getSelection(monster=EMPTY_SELECTOR,
+                 hero=EMPTY_SELECTOR,
+                 villager=EMPTY_SELECTOR,
+                 maxTries=MAX_TRIES):
     """
     Generate a random selection according to the rules
     and satisfying all dependencies
@@ -103,6 +110,15 @@ def getSelection(m=set([]), h=set([]), v=set([]), maxTries=MAX_TRIES):
     :returns: Selection
     """
 
+    allowedMonsters = monsters - monster.blacklist
+    preferredMonsters = monster.whitelist
+
+    allowedHeroes = heroes - hero.blacklist
+    preferredHeroes = hero.whitelist
+
+    allowedVillagers = villagers - villager.blacklist
+    preferredVillagers = villager.whitelist
+
     # Randomly generate selections until a valid selection is found
     # Maximum of maxTries tries
     counter = 0
@@ -110,9 +126,15 @@ def getSelection(m=set([]), h=set([]), v=set([]), maxTries=MAX_TRIES):
     while validated is False:
 
         # If necessary, modify the input sets
-        m = selectionHelper(m, monsters, MONSTER_AMOUNT)
-        h = selectionHelper(h, heroes, HERO_AMOUNT)
-        v = selectionHelper(v, villagers, VILLAGE_AMOUNT)
+        m = selectionHelper(preferredMonsters,
+                            allowedMonsters,
+                            MONSTER_AMOUNT)
+        h = selectionHelper(preferredHeroes,
+                            allowedHeroes,
+                            HERO_AMOUNT)
+        v = selectionHelper(preferredVillagers,
+                            allowedVillagers,
+                            VILLAGE_AMOUNT)
 
         # Increment counter after each selection process
         counter += 1
@@ -123,7 +145,7 @@ def getSelection(m=set([]), h=set([]), v=set([]), maxTries=MAX_TRIES):
 
         # Exit if too many tries are needed
         if counter >= maxTries:
-            validated = True
+            break
 
     return selection
 
