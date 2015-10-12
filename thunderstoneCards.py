@@ -19,6 +19,19 @@ CARD_MAGIC_ATK = 3
 CARD_DISEASE = 4
 MAX_TRIES = 1000
 
+class classSelector(object):
+    
+    """selector for forced or blacklisted cards"""
+    
+    def __init__(self, whitelist, blacklist):
+        """
+        :whitelist: through gui-defined cards that is wanted in selection
+        :blacklist: through gui-defined cards that is excluded from selection
+        """
+        
+        self.whitelist = whitelist
+        self.blacklist = blacklist
+        
 
 class Selection(object):
 
