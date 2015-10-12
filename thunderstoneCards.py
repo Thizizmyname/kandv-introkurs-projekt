@@ -32,6 +32,17 @@ class Selection(object):
         self.h = h
         self.v = v
 
+    def __str__(self):
+        string = ''
+        for card in self.m:
+            string += card[CARD_NAME] + '\n'
+        for card in self.h:
+            string += card[CARD_NAME] + '\n'
+        for card in self.v:
+            string += card[CARD_NAME] + '\n'
+
+        return string
+
     def validate(self):
         """True if all dependencies are met for this Selection
         :returns: Boolean
@@ -74,7 +85,8 @@ def selectionHelper(subset, superset, length):
     elif subset_length < length:
         # Add random unique elements from the complement until given length
         subset_complement = superset - subset
-        return subset | set(random.sample(subset_complement, length - subset_length))
+        return subset | set(random.sample(
+            subset_complement, length - subset_length))
 
     # If none of the conditions apply, just return the subset
     return subset
@@ -190,7 +202,7 @@ def depChk(dep, cards):
                 if indvdep in card[CARD_TYPE]:
                     return True
 
-    elif dep == 'fighter' or dep == 'cleric' or dep == 'spell':
+    elif dep == 'fighter' or dep == 'spell':
         # se om något kort är av typ 'fighter' från lista
         for card in cards:
             if dep in card[CARD_TYPE]:
@@ -207,6 +219,8 @@ def depChk(dep, cards):
         for card in cards:
             if card[CARD_DISEASE]:
                 return True
+    elif dep == 'cleric':
+        return True
 
     return False
 
