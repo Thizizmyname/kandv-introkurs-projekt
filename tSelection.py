@@ -3,6 +3,7 @@
 
 
 import random
+import tCards
 
 
 class ClassSelector(object):
@@ -34,11 +35,11 @@ class Selection(object):
     def __str__(self):
         string = ''
         for card in self.m:
-            string += card[CARD_NAME] + '\n'
+            string += card[tCards.INDEX_NAME] + '\n'
         for card in self.h:
-            string += card[CARD_NAME] + '\n'
+            string += card[tCards.INDEX_NAME] + '\n'
         for card in self.v:
-            string += card[CARD_NAME] + '\n'
+            string += card[tCards.INDEX_NAME] + '\n'
 
         return string
 
@@ -53,28 +54,13 @@ class Selection(object):
 
         for card in allCards:
             # Iterate over each cards dependencies
-            for dep in card[CARD_DEPENDENCIES]:
+            for dep in card[tCards.INDEX_DEPENDENCIES]:
                 if not depChk(dep, allCards):
                     # If any dependency is unmet, exit early
                     return False
 
         return True
 
-
-#############
-# Constants #
-#############
-
-# Index of the dependency property
-MONSTER_AMOUNT = 3
-HERO_AMOUNT = 4
-VILLAGE_AMOUNT = 8
-
-CARD_NAME = 0
-CARD_TYPE = 1
-CARD_DEPENDENCIES = 2
-CARD_MAGIC_ATK = 3
-CARD_DISEASE = 4
 
 MAX_TRIES = 1000
 
@@ -125,13 +111,13 @@ def getSelection(monster=EMPTY_SELECTOR,
     :returns: Selection
     """
 
-    allowedMonsters = monsters - monster.blacklist
+    allowedMonsters = tCards.MONSTERS - monster.blacklist
     preferredMonsters = monster.whitelist
 
-    allowedHeroes = heroes - hero.blacklist
+    allowedHeroes = tCards.HEROES - hero.blacklist
     preferredHeroes = hero.whitelist
 
-    allowedVillagers = villagers - villager.blacklist
+    allowedVillagers = tCards.VILLAGERS - villager.blacklist
     preferredVillagers = villager.whitelist
 
     # Randomly generate selections until a valid selection is found
@@ -143,13 +129,13 @@ def getSelection(monster=EMPTY_SELECTOR,
         # If necessary, modify the input sets
         m = selectionHelper(preferredMonsters,
                             allowedMonsters,
-                            MONSTER_AMOUNT)
+                            tCards.MONSTER_AMOUNT)
         h = selectionHelper(preferredHeroes,
                             allowedHeroes,
-                            HERO_AMOUNT)
+                            tCards.HERO_AMOUNT)
         v = selectionHelper(preferredVillagers,
                             allowedVillagers,
-                            VILLAGE_AMOUNT)
+                            tCards.VILLAGE_AMOUNT)
 
         # Increment counter after each selection process
         counter += 1
@@ -163,62 +149,6 @@ def getSelection(monster=EMPTY_SELECTOR,
             break
 
     return selection
-
-
-# Class = [(cardname, [list of type], [list of dependencies], Have:magicAtk, Give:Disease)]
-# if card have an "either-or" dependency, make it as a list
-# Example: "Each player gains one disease unless they reveal a cleric or thief"
-# WARNING: works only with type, not Have:magicAtk or Give:Disease
-
-
-heroes = set([
-        ('Chalice', ('fighter', 'cleric'), ('disease',), False, False),
-        ('Redblade', ('fighter', 'thief'), (), False, False),
-        ('Outlands', ('fighter',), (), False, False),
-        ('Feayn', ('fighter', 'archer'), (), False, False),
-        ('Regian', ('cleric',), (), True, False),
-        ('Dwarf', ('fighter',), (), False, False),
-        ('Selurin', ('wizard',), (), True, False),
-        ('Elf', ('wizard',), (), True, False),
-        ('Amazon', ('fighter', 'archer'), (), False, False),
-        ('Lorigg', ('thief',), (), False, False),
-        ('Thyrian', ('fighter',), (), False, False)
-        ])
-
-
-monsters = set([
-        ('Doomknight - Humanoid', ('Doomknight', 'Humanoid'), ('fighter',), False, False),
-        ('Undead - Spirit', ('Undead', 'Spirit'), ('magicAtk',), False, False),
-        ('Undead - Doom', ('Undead', 'Doom'), ('spell',), False, True),
-        ('Dragon', ('dragon',), ('magicAtk',), False, False),
-        ('Abyssal', ('abyssal',), ('magicAtk', 'cleric'), False, True),
-        ('Humanoid', ('humanoid',), (), False, True),
-        ('Ooze', ('ooze',), ('magicAtk',), False, False),
-        ('Enchanted', ('enchanted',), ('magicAtk',), False, False)
-        ])
-
-
-villagers = set([
-        ('Flaming Sword', ('weapon', 'edged'), (), True, False),
-        ('Arcane Energies', ('spell',), (), True, False),
-        ('Short Sword', ('weapon', 'edged'), (), True, False),
-        ('Spear', ('weapon', 'edged'), (), False, False),
-        ('Fireball', ('spell',), (), True, False),
-        ('Trainer', ('villager',), (), False, False),
-        ('Town Guard', ('villager',), (), False, False),
-        ('Battle Fury', ('spell',), (), False, False),
-        ('Banish', ('spell',), (), False, False),
-        ('Magical Aura', ('spell',), (), False, False),
-        ('Lightstone Gem', ('item', 'light', 'magic'), (), False, False),
-        ('Feast', ('item', 'food'), (), False, False),
-        ('Goodberries', ('item', 'food', 'magic'), (), True, False),
-        ('Hatchet', ('weapon', 'edged'), (), False, False),
-        ('Pawnbroker', ('villager',), (), False, False),
-        ('Barkeep', ('villager',), (), False, False),
-        ('Lantern', ('item', 'light'), (), False, False),
-        ('Warhammer', ('weapon', 'blunt'), (), False, False),
-        ('Polearm', ('weapon', 'edged'), (), False, False)
-        ])
 
 
 def depChk(dep, cards):
@@ -236,25 +166,25 @@ def depChk(dep, cards):
         # kollar sedan om något av kriterierna blir bemötta.
         for card in cards:
             for indvdep in dep:
-                if indvdep in card[CARD_TYPE]:
+                if indvdep in card[tCards.INDEX_TYPE]:
                     return True
 
     elif dep == 'fighter' or dep == 'spell':
         # se om något kort är av typ 'fighter' från lista
         for card in cards:
-            if dep in card[CARD_TYPE]:
+            if dep in card[tCards.INDEX_TYPE]:
                 return True
 
     elif dep == 'magicAtk':
         # se om något kort innehåller boolen magicAtk == True
         for card in cards:
-            if card[CARD_MAGIC_ATK]:
+            if card[tCards.INDEX_MAGIC_ATK]:
                 return True
 
     elif dep == 'disease':
         # se om något kort innehåller boolen disease == True
         for card in cards:
-            if card[CARD_DISEASE]:
+            if card[tCards.INDEX_DISEASE]:
                 return True
     elif dep == 'cleric':
         return True
