@@ -8,15 +8,16 @@ import random
 # Constants #
 #############
 
-#Index of the dependency property 
-MONSTERAMOUNT = 3
-HEROAMOUNT = 4
-VILLAGEAMOUNT = 8
-CARDNAME = 0
-CARDTYPE = 1
-CARDDEPENDENCIES = 2
-CARDMAGICATK = 3
-CARDDISEASE = 4
+# Index of the dependency property
+MONSTER_AMOUNT = 3
+HERO_AMOUNT = 4
+VILLAGE_AMOUNT = 8
+CARD_NAME = 0
+CARD_TYPE = 1
+CARD_DEPENDENCIES = 2
+CARD_MAGIC_ATK = 3
+CARD_DISEASE = 4
+MAX_TRIES = 1000
 
 
 class Selection(object):
@@ -38,11 +39,11 @@ class Selection(object):
         """
 
         # List of all cards in the selection
-        allCards = m + h + v
+        allCards = self.m | self.h | self.v
 
         for card in allCards:
             # Iterate over each cards dependencies
-            for dep in card[CARDDEPENDENCIES]:
+            for dep in card[CARD_DEPENDENCIES]:
                 if not depChk(dep, allCards):
                     # If any dependency is unmet, exit early
                     return False
@@ -52,7 +53,7 @@ class Selection(object):
 
 def selectionHelper(subset, superset, length):
     """
-    TODO: Docstring for selectionHelper.
+    Make a subset of a given length.
 
     :subset: A set. A subset of superset. Could be empty.
     :superset: A set. A superset of subset.
@@ -61,17 +62,25 @@ def selectionHelper(subset, superset, length):
 
     """
 
+    # The original length of the subset
     subset_length = len(subset)
-    if subset_length > length:
-        return set(random.sample(subset, 3))
-    elif subset_length < length:
-        subset_complement = superset - subset
-        return subset + set(random.sample(subset_complement, length - subset_length))
 
+    # If the subset has too many items
+    if subset_length > length:
+        # Randomly take 'length' number of unique items from subset
+        return set(random.sample(subset, length))
+
+    # Else, if the subset is too small
+    elif subset_length < length:
+        # Add random unique elements from the complement until given length
+        subset_complement = superset - subset
+        return subset | set(random.sample(subset_complement, length - subset_length))
+
+    # If none of the conditions apply, just return the subset
     return subset
 
 
-def getSelection(m = set([]), h = set([]), v = set([])):
+def getSelection(m=set([]), h=set([]), v=set([]), maxTries=MAX_TRIES):
     """
     Generate a random selection according to the rules
     and satisfying all dependencies
@@ -82,19 +91,29 @@ def getSelection(m = set([]), h = set([]), v = set([])):
     :returns: Selection
     """
 
+    # Randomly generate selections until a valid selection is found
+    # Maximum of maxTries tries
+    counter = 0
     validated = False
     while validated is False:
 
-        m = selectionHelper(m, monsters, MONSTERAMOUNT)
-        h = selectionHelper(h, heroes, HEROAMOUNT)
-        v = selectionHelper(v, villagers, VILLAGEAMOUNT)
+        # If necessary, modify the input sets
+        m = selectionHelper(m, monsters, MONSTER_AMOUNT)
+        h = selectionHelper(h, heroes, HERO_AMOUNT)
+        v = selectionHelper(v, villagers, VILLAGE_AMOUNT)
 
+        # Increment counter after each selection process
+        counter += 1
+
+        # Make a selection object and valudate it
         selection = Selection(m, h, v)
-
         validated = selection.validate()
 
+        # Exit if too many tries are needed
+        if counter >= maxTries:
+            validated = True
+
     return selection
-    
 
 
 # Class = [(cardname, [list of type], [list of dependencies], Have:magicAtk, Give:Disease)]
@@ -104,59 +123,57 @@ def getSelection(m = set([]), h = set([]), v = set([])):
 
 
 heroes = set([
-        ('Chalice', ['fighter', 'cleric'], ['disease'], False, False),
-        ('Redblade', ['fighter', 'thief'], [], False, False),
-        ('Outlands', ['fighter'], [], False, False),
-        ('Feayn', ['fighter', 'archer'], [], False, False),
-        ('Regian', ['cleric'], [], True, False),
-        ('Dwarf', ['fighter'], [], False, False),
-        ('Selurin', ['wizard'], [], True, False),
-        ('Elf', ['wizard'], [], True, False),
-        ('Amazon', ['fighter', 'archer'], [], False, False),
-        ('Lorigg', ['thief'], [], False, False),
-        ('Thyrian', ['fighter'], [], False, False)
+        ('Chalice', ('fighter', 'cleric'), ('disease',), False, False),
+        ('Redblade', ('fighter', 'thief'), (), False, False),
+        ('Outlands', ('fighter',), (), False, False),
+        ('Feayn', ('fighter', 'archer'), (), False, False),
+        ('Regian', ('cleric',), (), True, False),
+        ('Dwarf', ('fighter',), (), False, False),
+        ('Selurin', ('wizard',), (), True, False),
+        ('Elf', ('wizard',), (), True, False),
+        ('Amazon', ('fighter', 'archer'), (), False, False),
+        ('Lorigg', ('thief',), (), False, False),
+        ('Thyrian', ('fighter',), (), False, False)
         ])
 
 
 monsters = set([
-        ('Doomknight - Humanoid', ['Doomknight', 'Humanoid'], ['fighter'], False, False),
-        ('Undead - Spirit', ['Undead', 'Spirit'], ['magicAtk'], False, False),
-        ('Undead - Doom', ['Undead', 'Doom'], ['spell'], False, True), 
-        ('Dragon', ['dragon'], ['magicAtk'], False, False),
-        ('Abyssal', ['abyssal'], ['magicAtk', 'cleric'], False, True),
-        ('Humanoid', ['humanoid'], [], False, True),
-        ('Ooze', ['ooze'], ['magicAtk'], False, False),
-        ('Enchanted', ['enchanted'], ['magicAtk'], False, False)
+        ('Doomknight - Humanoid', ('Doomknight', 'Humanoid'), ('fighter',), False, False),
+        ('Undead - Spirit', ('Undead', 'Spirit'), ('magicAtk',), False, False),
+        ('Undead - Doom', ('Undead', 'Doom'), ('spell',), False, True),
+        ('Dragon', ('dragon',), ('magicAtk',), False, False),
+        ('Abyssal', ('abyssal',), ('magicAtk', 'cleric'), False, True),
+        ('Humanoid', ('humanoid',), (), False, True),
+        ('Ooze', ('ooze',), ('magicAtk',), False, False),
+        ('Enchanted', ('enchanted',), ('magicAtk',), False, False)
         ])
 
 
 villagers = set([
-        ('Flaming Sword', ['weapon', 'edged'], [], True, False),
-        ('Arcane Energies', ['spell'], [], True, False),
-        ('Short Sword', ['weapon', 'edged'], [], True, False),
-        ('Spear', ['weapon', 'edged'], [], False, False),
-        ('Fireball', ['spell'], [], True, False),
-        ('Trainer', ['villager'], [], False, False),
-        ('Town Guard', ['villager'], [], False, False),
-        ('Battle Fury', ['spell'], [], False, False),
-        ('Banish', ['spell'], [], False, False),
-        ('Magical Aura', ['spell'], [], False, False),
-        ('Lightstone Gem', ['item', 'light', 'magic'], [], False, False),
-        ('Feast', ['item', 'food'], [], False, False),
-        ('Goodberries', ['item', 'food', 'magic'], [], True, False),
-        ('Hatchet', ['weapon', 'edged'], [], False, False),
-        ('Pawnbroker', ['villager'], [], False, False),
-        ('Barkeep', ['villager'], [], False, False),
-        ('Lantern', ['item', 'light'], [], False, False),
-        ('Warhammer', ['weapon', 'blunt'], [], False, False),
-        ('Polearm', ['weapon', 'edged'], [], False, False)
+        ('Flaming Sword', ('weapon', 'edged'), (), True, False),
+        ('Arcane Energies', ('spell',), (), True, False),
+        ('Short Sword', ('weapon', 'edged'), (), True, False),
+        ('Spear', ('weapon', 'edged'), (), False, False),
+        ('Fireball', ('spell',), (), True, False),
+        ('Trainer', ('villager',), (), False, False),
+        ('Town Guard', ('villager',), (), False, False),
+        ('Battle Fury', ('spell',), (), False, False),
+        ('Banish', ('spell',), (), False, False),
+        ('Magical Aura', ('spell',), (), False, False),
+        ('Lightstone Gem', ('item', 'light', 'magic'), (), False, False),
+        ('Feast', ('item', 'food'), (), False, False),
+        ('Goodberries', ('item', 'food', 'magic'), (), True, False),
+        ('Hatchet', ('weapon', 'edged'), (), False, False),
+        ('Pawnbroker', ('villager',), (), False, False),
+        ('Barkeep', ('villager',), (), False, False),
+        ('Lantern', ('item', 'light'), (), False, False),
+        ('Warhammer', ('weapon', 'blunt'), (), False, False),
+        ('Polearm', ('weapon', 'edged'), (), False, False)
         ])
 
-    
 
+def depChk(dep, cards):
 
-def depchk(dep, cards):
-    
     """
     dep = dependency (string)
     cards = list of tupels
@@ -165,38 +182,33 @@ def depchk(dep, cards):
     Returns : bool, true if all dependencies are met in any of the cards
     """
 
-
-    if isinstance(dep, list):
+    if isinstance(dep, tuple):
         # se om dep är en lista (vilket härleder en "either or-dependency")
         # kollar sedan om något av kriterierna blir bemötta.
         for card in cards:
-            for indvdep in dep
-                if indvdep in cards(CARDTYPE):
+            for indvdep in dep:
+                if indvdep in card[CARD_TYPE]:
                     return True
 
     elif dep == 'fighter' or dep == 'cleric' or dep == 'spell':
         # se om något kort är av typ 'fighter' från lista
         for card in cards:
-            if dep in cards(CARDTYPE):
+            if dep in card[CARD_TYPE]:
                 return True
-        
-        
+
     elif dep == 'magicAtk':
         # se om något kort innehåller boolen magicAtk == True
         for card in cards:
-            if cards(CARDMAGICATK):
+            if card[CARD_MAGIC_ATK]:
                 return True
 
-    elif dep == 'disease'
+    elif dep == 'disease':
         # se om något kort innehåller boolen disease == True
         for card in cards:
-            if cards(CARDDISEASE):
+            if card[CARD_DISEASE]:
                 return True
 
-
-
-
-
+    return False
 
 """
 construct selection
