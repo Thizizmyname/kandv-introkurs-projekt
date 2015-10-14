@@ -18,18 +18,42 @@ class ThunderstoneRandomizerGTK():
         self.glade.connect_signals(self)
 
         self.window = self.glade.get_object('MainWindow')
+ 
+        self.selectionNotebook = self.glade.get_object('selectionNotebook')
 
-        self.monsterListStore = gtk.ListStore(str, bool, bool, bool)
+        self.monsterListStore = self.cardListStore(monsters)
+        self.heroListStore = self.cardListStore(heroes)
+        self.villageListStore = self.cardListStore(villagers)
 
-        for monster in monsters:
-            name = monster[tCards.INDEX_NAME]
+        self.monsterTreeView = self.cardTreeView(self.monsterListStore)
+        self.heroTreeView = self.cardTreeView(self.heroListStore)
+        self.villageTreeView = self.cardTreeView(self.villageListStore)
+
+        self.selectionNotebook.append_page(
+                self.monsterTreeView, gtk.Label('Monster Cards'))
+        self.selectionNotebook.append_page(
+                self.heroTreeView, gtk.Label('Hero Cards'))
+        self.selectionNotebook.append_page(
+                self.villageTreeView, gtk.Label('Village Cards'))
+
+        self.window.show_all()
+
+    def cardListStore(self, cards):
+        listStore = gtk.ListStore(str, bool, bool, bool)
+
+        for card in cards:
+            name = card[tCards.INDEX_NAME]
             row = [name, True, False, False]
-            self.monsterListStore.append(row)
+            listStore.append(row)
 
-        self.monsterTreeView = gtk.TreeView(model=self.monsterListStore)
+        return listStore
+
+    def cardTreeView(self, listStore):
+        treeView = gtk.TreeView(model=listStore)
 
         renderer_text = gtk.CellRendererText()
         column_text = gtk.TreeViewColumn('Name', renderer_text, text=0)
+        column_text.set_expand(True)
 
         renderer_toggle_normal = gtk.CellRendererToggle()
         renderer_toggle_normal.set_radio(True)
@@ -43,16 +67,12 @@ class ThunderstoneRandomizerGTK():
         renderer_toggle_banned.set_radio(True)
         column_banned = gtk.TreeViewColumn('Banned', renderer_toggle_banned, active=3)
 
-        self.monsterTreeView.append_column(column_text)
-        self.monsterTreeView.append_column(column_normal)
-        self.monsterTreeView.append_column(column_forced)
-        self.monsterTreeView.append_column(column_banned)
+        treeView.append_column(column_text)
+        treeView.append_column(column_normal)
+        treeView.append_column(column_forced)
+        treeView.append_column(column_banned)
 
-        self.selectionNotebook = self.glade.get_object('selectionNotebook')
-        self.selectionNotebook.append_page(
-                self.monsterTreeView, gtk.Label('Monster Cards'))
-
-        self.window.show_all()
+        return treeView
 
     def on_MainWindow_destroy(self, *args):
         gtk.main_quit(*args)
