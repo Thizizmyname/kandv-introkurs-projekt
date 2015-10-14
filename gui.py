@@ -18,7 +18,7 @@ class ThunderstoneRandomizerGTK():
         self.glade.connect_signals(self)
 
         self.window = self.glade.get_object('MainWindow')
- 
+
         self.selectionNotebook = self.glade.get_object('selectionNotebook')
 
         self.monsterListStore = self.cardListStore(monsters)
@@ -30,11 +30,11 @@ class ThunderstoneRandomizerGTK():
         self.villageTreeView = self.cardTreeView(self.villageListStore)
 
         self.selectionNotebook.append_page(
-                self.monsterTreeView, gtk.Label('Monster Cards'))
+            self.monsterTreeView, gtk.Label('Monster Cards'))
         self.selectionNotebook.append_page(
-                self.heroTreeView, gtk.Label('Hero Cards'))
+            self.heroTreeView, gtk.Label('Hero Cards'))
         self.selectionNotebook.append_page(
-                self.villageTreeView, gtk.Label('Village Cards'))
+            self.villageTreeView, gtk.Label('Village Cards'))
 
         self.window.show_all()
 
@@ -57,15 +57,27 @@ class ThunderstoneRandomizerGTK():
 
         renderer_toggle_normal = gtk.CellRendererToggle()
         renderer_toggle_normal.set_radio(True)
-        column_normal = gtk.TreeViewColumn('Normal', renderer_toggle_normal, active=1)
+        renderer_toggle_normal.connect(
+            'toggled', self.on_normal_toggle, listStore)
+
+        column_normal = gtk.TreeViewColumn(
+            'Normal', renderer_toggle_normal, active=1)
 
         renderer_toggle_forced = gtk.CellRendererToggle()
         renderer_toggle_forced.set_radio(True)
-        column_forced = gtk.TreeViewColumn('Forced', renderer_toggle_forced, active=2)
+        renderer_toggle_forced.connect(
+            'toggled', self.on_forced_toggle, listStore)
+
+        column_forced = gtk.TreeViewColumn(
+            'Forced', renderer_toggle_forced, active=2)
 
         renderer_toggle_banned = gtk.CellRendererToggle()
         renderer_toggle_banned.set_radio(True)
-        column_banned = gtk.TreeViewColumn('Banned', renderer_toggle_banned, active=3)
+        renderer_toggle_banned.connect(
+            'toggled', self.on_banned_toggle, listStore)
+
+        column_banned = gtk.TreeViewColumn(
+            'Banned', renderer_toggle_banned, active=3)
 
         treeView.append_column(column_text)
         treeView.append_column(column_normal)
@@ -76,6 +88,21 @@ class ThunderstoneRandomizerGTK():
 
     def on_MainWindow_destroy(self, *args):
         gtk.main_quit(*args)
+
+    def on_normal_toggle(self, widget, path, listStore):
+        listStore[path][1] = True
+        listStore[path][2] = False
+        listStore[path][3] = False
+
+    def on_forced_toggle(self, widget, path, listStore):
+        listStore[path][1] = False
+        listStore[path][2] = True
+        listStore[path][3] = False
+
+    def on_banned_toggle(self, widget, path, listStore):
+        listStore[path][1] = False
+        listStore[path][2] = False
+        listStore[path][3] = True
 
 
 def main():
