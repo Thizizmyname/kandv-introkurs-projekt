@@ -4,6 +4,8 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="MainWindow">
     <property name="can_focus">False</property>
+    <property name="border_width">10</property>
+    <property name="title" translatable="yes">Thunderstone Randomizer</property>
     <signal name="destroy" handler="on_MainWindow_destroy" swapped="no"/>
     <child>
       <object class="GtkHBox" id="hbox1">
@@ -18,11 +20,13 @@
               <object class="GtkLabel" id="label6">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Customisation</property>
+                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Customisation&lt;/b&gt;&lt;/big&gt;</property>
+                <property name="use_markup">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -95,7 +99,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="border_width">11</property>
+                        <property name="border_width">10</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -132,16 +136,19 @@
           <object class="GtkVBox" id="selectionVBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="spacing">30</property>
             <child>
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Selected cards:</property>
+                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Selected cards:&lt;/b&gt;&lt;/big&gt;</property>
+                <property name="use_markup">True</property>
                 <property name="justify">center</property>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">True</property>
+                <property name="fill">False</property>
+                <property name="padding">5</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -158,6 +165,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="border_width">10</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
