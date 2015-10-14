@@ -80,7 +80,23 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkCheckButton" id="checkbutton1">
+                      <object class="GtkButton" id="randomizeButton">
+                        <property name="label" translatable="yes">Randomize!</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="border_width">10</property>
+                        <signal name="clicked" handler="on_randomize" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkCheckButton" id="validateCheckbox">
                         <property name="label" translatable="yes">Validate Selection</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
@@ -88,22 +104,9 @@
                         <property name="draw_indicator">True</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button2">
-                        <property name="label" translatable="yes">Randomize!</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="border_width">10</property>
-                      </object>
-                      <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
+                        <property name="pack_type">end</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -160,12 +163,13 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkButton" id="button1">
+                  <object class="GtkButton" id="reshuffleButton">
                     <property name="label" translatable="yes">Reshuffle</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="border_width">10</property>
+                    <signal name="clicked" handler="on_reshuffleButton_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -177,7 +181,7 @@
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">check individual cards to reshuffle</property>
+                    <property name="label" translatable="yes">Check individual cards to reshuffle</property>
                   </object>
                   <packing>
                     <property name="expand">True</property>
