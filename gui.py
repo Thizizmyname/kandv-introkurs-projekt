@@ -24,38 +24,51 @@ class ThunderstoneRandomizerGTK():
 
         # The notebook of card classes
         self.selectionNotebook = self.glade.get_object('selectionNotebook')
-        # The selection-containing view
-        self.selectionVBox = self.glade.get_object('selectionVBox')
 
-        # List stores for customize and selection
-        self.monsterListStore = self._cardListStore(monsters)
-        self.heroListStore = self._cardListStore(heroes)
-        self.villageListStore = self._cardListStore(villagers)
+        self.selectionWindow = self.glade.get_object('selectionWindow')
+
+        self.monsterScrollableWindow = gtk.ScrolledWindow()
+        self.monsterScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+
+        self.heroScrollableWindow = gtk.ScrolledWindow()
+        self.heroScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+
+        self.villageScrollableWindow = gtk.ScrolledWindow()
+        self.villageScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+
+        self.monsterListStore = self.cardListStore(monsters)
+        self.heroListStore = self.cardListStore(heroes)
+        self.villageListStore = self.cardListStore(villagers)
         self.selectionListStore = gtk.ListStore(str, bool)
 
-        # ...and their treeviews
-        self.monsterTreeView = self._cardTreeView(self.monsterListStore)
-        self.heroTreeView = self._cardTreeView(self.heroListStore)
-        self.villageTreeView = self._cardTreeView(self.villageListStore)
-        self.selectionTreeView = self._makeSelectionTreeView(self.selectionListStore)
+        self.monsterTreeView = self.cardTreeView(self.monsterListStore)
+        self.heroTreeView = self.cardTreeView(self.heroListStore)
+        self.villageTreeView = self.cardTreeView(self.villageListStore)
+        self.selectionTreeView = self.makeSelectionTreeView(self.selectionListStore)
+        
+        self.monsterScrollableWindow.add(self.monsterTreeView)
+        self.heroScrollableWindow.add(self.heroTreeView)
+        self.villageScrollableWindow.add(self.villageTreeView)
 
-        # Make tabs in notebook for each customize tree
         self.selectionNotebook.append_page(
-            self.monsterTreeView, gtk.Label('Monster Cards'))
+            self.monsterScrollableWindow, gtk.Label('Monster Cards'))
         self.selectionNotebook.append_page(
-            self.heroTreeView, gtk.Label('Hero Cards'))
+            self.heroScrollableWindow, gtk.Label('Hero Cards'))
         self.selectionNotebook.append_page(
-            self.villageTreeView, gtk.Label('Village Cards'))
+            self.villageScrollableWindow, gtk.Label('Village Cards'))
 
-        reshuffleBar = self.glade.get_object('hbox2')
+        self.selectionWindow.add(self.selectionTreeView)
+
+        # Show the application
+        self.window.show_all()
+
+        """reshuffleBar = self.glade.get_object('hbox2')
 
         # Insert selection tree
         self.selectionVBox.remove(reshuffleBar)
         self.selectionVBox.pack_end(self.selectionTreeView)
-        self.selectionVBox.pack_end(reshuffleBar)
+        self.selectionVBox.pack_end(reshuffleBar)"""
 
-        # Show the application
-        self.window.show_all()
 
     def _cardListStore(self, cards):
         """
