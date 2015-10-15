@@ -8,32 +8,38 @@ class ThunderstoneRandomizerGTK():
 
     def __init__(self):
 
+        # Get monster sets
         monsters = tCards.MONSTERS
         heroes = tCards.HEROES
         villagers = tCards.VILLAGERS
 
+        # Load glade layout
         gladefile = 'gui.glade'
         self.glade = gtk.Builder()
         self.glade.add_from_file(gladefile)
         self.glade.connect_signals(self)
 
+        # Our root window
         self.window = self.glade.get_object('MainWindow')
 
+        # The notebook of card classes
         self.selectionNotebook = self.glade.get_object('selectionNotebook')
+        # The selection-containing view
         self.selectionVBox = self.glade.get_object('selectionVBox')
 
-        self.randomizeButton = self.glade.get_object('randomizeButton')
-
-        self.monsterListStore = self.cardListStore(monsters)
-        self.heroListStore = self.cardListStore(heroes)
-        self.villageListStore = self.cardListStore(villagers)
+        # List stores for customize and selection
+        self.monsterListStore = self._cardListStore(monsters)
+        self.heroListStore = self._cardListStore(heroes)
+        self.villageListStore = self._cardListStore(villagers)
         self.selectionListStore = gtk.ListStore(str, bool)
 
-        self.monsterTreeView = self.cardTreeView(self.monsterListStore)
-        self.heroTreeView = self.cardTreeView(self.heroListStore)
-        self.villageTreeView = self.cardTreeView(self.villageListStore)
-        self.selectionTreeView = self.makeSelectionTreeView(self.selectionListStore)
+        # ...and their treeviews
+        self.monsterTreeView = self._cardTreeView(self.monsterListStore)
+        self.heroTreeView = self._cardTreeView(self.heroListStore)
+        self.villageTreeView = self._cardTreeView(self.villageListStore)
+        self.selectionTreeView = self._makeSelectionTreeView(self.selectionListStore)
 
+        # Make tabs in notebook for each customize tree
         self.selectionNotebook.append_page(
             self.monsterTreeView, gtk.Label('Monster Cards'))
         self.selectionNotebook.append_page(
@@ -43,13 +49,19 @@ class ThunderstoneRandomizerGTK():
 
         reshuffleBar = self.glade.get_object('hbox2')
 
+        # Insert selection tree
         self.selectionVBox.remove(reshuffleBar)
         self.selectionVBox.pack_end(self.selectionTreeView)
         self.selectionVBox.pack_end(reshuffleBar)
 
+        # Show the application
         self.window.show_all()
 
-    def cardListStore(self, cards):
+    def _cardListStore(self, cards):
+        """
+        Creates and returns a listStore containing the card names and three bools
+        """
+
         listStore = gtk.ListStore(str, bool, bool, bool)
 
         for card in cards:
@@ -59,7 +71,11 @@ class ThunderstoneRandomizerGTK():
 
         return listStore
 
-    def makeSelectionTreeView(self, listStore):
+    def _makeSelectionTreeView(self, listStore):
+        """
+        Creates and returns a TreeStore with one name column and one checkbox column.
+        """
+
         treeView = gtk.TreeView(model=listStore)
 
         renderer_text = gtk.CellRendererText()
@@ -68,7 +84,7 @@ class ThunderstoneRandomizerGTK():
 
         renderer_toggle_reshuffle = gtk.CellRendererToggle()
         renderer_toggle_reshuffle.connect(
-            'toggled', self.on_reshuffle_toggle)
+            'toggled', self.on_reshuffle_toggle, listStore)
 
         column_reshuffle = gtk.TreeViewColumn(
             'Reshuffle', renderer_toggle_reshuffle, active=1)
@@ -77,8 +93,12 @@ class ThunderstoneRandomizerGTK():
         treeView.append_column(column_reshuffle)
 
         return treeView
-    
-    def cardTreeView(self, listStore):
+
+    def _cardTreeView(self, listStore):
+        """
+        Creates and returns a treeView with a name column and three radio buttons.
+        """
+
         treeView = gtk.TreeView(model=listStore)
 
         renderer_text = gtk.CellRendererText()
@@ -116,6 +136,13 @@ class ThunderstoneRandomizerGTK():
 
         return treeView
 
+    def _updateListStore(self, listStore, selection):
+        listStore.clear()
+
+        for card in selection.m | selection.h | selection.v:
+            name = card[tCards.INDEX_NAME]
+            listStore.append([name,  False])
+
     def on_MainWindow_destroy(self, *args):
         gtk.main_quit(*args)
 
@@ -136,21 +163,13 @@ class ThunderstoneRandomizerGTK():
 
     def on_randomize(self, widget, data=None):
         selection = tSelection.getSelection()
-        self.selectionTreeView.set_model(model=self.listStoreFromSelection(selection))
+        self._updateListStore(self.selectionListStore, selection)
 
-    def on_reshuffle_toggle(self, widget, path):
+    def on_reshuffle_toggle(self, widget, path, listStore):
+        listStore[path][1] = not listStore[path][1]
+
+    def on_reshuffleButton_clicked(self, widget, data=None):
         pass
-
-    def listStoreFromSelection(self, selection):
-        listStore = gtk.ListStore(str, bool)
-
-        for card in selection.m | selection.h | selection.v:
-            name = card[tCards.INDEX_NAME]
-            listStore.append([name,  False])
-
-        return listStore
-
-
 
 
 def main():
