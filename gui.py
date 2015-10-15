@@ -36,15 +36,15 @@ class ThunderstoneRandomizerGTK():
         self.villageScrollableWindow = gtk.ScrolledWindow()
         self.villageScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
-        self.monsterListStore = self.cardListStore(monsters)
-        self.heroListStore = self.cardListStore(heroes)
-        self.villageListStore = self.cardListStore(villagers)
+        self.monsterListStore = self._cardListStore(monsters)
+        self.heroListStore = self._cardListStore(heroes)
+        self.villageListStore = self._cardListStore(villagers)
         self.selectionListStore = gtk.ListStore(str, bool)
 
-        self.monsterTreeView = self.cardTreeView(self.monsterListStore)
-        self.heroTreeView = self.cardTreeView(self.heroListStore)
-        self.villageTreeView = self.cardTreeView(self.villageListStore)
-        self.selectionTreeView = self.makeSelectionTreeView(self.selectionListStore)
+        self.monsterTreeView = self._cardTreeView(self.monsterListStore)
+        self.heroTreeView = self._cardTreeView(self.heroListStore)
+        self.villageTreeView = self._cardTreeView(self.villageListStore)
+        self.selectionTreeView = self._makeSelectionTreeView(self.selectionListStore)
         
         self.monsterScrollableWindow.add(self.monsterTreeView)
         self.heroScrollableWindow.add(self.heroTreeView)
