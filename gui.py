@@ -9,9 +9,9 @@ class ThunderstoneRandomizerGTK():
     def __init__(self):
 
         # Get monster sets
-        monsters = tCards.MONSTERS
-        heroes = tCards.HEROES
-        villagers = tCards.VILLAGERS
+        self.monsters = tCards.MONSTERS
+        self.heroes = tCards.HEROES
+        self.villagers = tCards.VILLAGERS
 
         # Load glade layout
         gladefile = 'gui.glade'
@@ -36,9 +36,9 @@ class ThunderstoneRandomizerGTK():
         self.villageScrollableWindow = gtk.ScrolledWindow()
         self.villageScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
-        self.monsterListStore = self._cardListStore(monsters)
-        self.heroListStore = self._cardListStore(heroes)
-        self.villageListStore = self._cardListStore(villagers)
+        self.monsterListStore = self._cardListStore(self.monsters)
+        self.heroListStore = self._cardListStore(self.heroes)
+        self.villageListStore = self._cardListStore(self.villagers)
         self.selectionListStore = gtk.ListStore(str, bool)
 
         self.monsterTreeView = self._cardTreeView(self.monsterListStore)
@@ -81,7 +81,8 @@ class ThunderstoneRandomizerGTK():
             name = card[tCards.INDEX_NAME]
             row = [name, True, False, False]
             listStore.append(row)
-
+        
+        listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         return listStore
 
     def _makeSelectionTreeView(self, listStore):
@@ -175,8 +176,34 @@ class ThunderstoneRandomizerGTK():
         listStore[path][3] = True
 
     def on_randomize(self, widget, data=None):
-        selection = tSelection.getSelection()
+        
+        forcedMonsters = []
+        bannedMonsters = []
+        
+        
+        for row in self.monsterListStore:
+            if self._isForced(row):
+                card = tCards.cardFromCardName(row[0])
+                forcedMonsters.append(card)
+            if self._isBanned(row):
+                card = tCards.cardFromCardName(row[0])
+                bannedMonsters.append(card)
+        
+        forcedMonsters = set(forcedMonsters)
+        bannedMonsters = set(bannedMonsters)
+        
+        assert len(bannedMonsters) <= len(self.monsters) - tCards.MONSTER_AMOUNT
+        
+        monsterSelector = tSelection.ClassSelector(forcedMonsters, bannedMonsters)
+        
+        selection = tSelection.getSelection(monster=monsterSelector)
         self._updateListStore(self.selectionListStore, selection)
+
+    def _isForced(self, row):
+        return row[2]
+        
+    def _isBanned(self, row):
+        return row[3]
 
     def on_reshuffle_toggle(self, widget, path, listStore):
         listStore[path][1] = not listStore[path][1]

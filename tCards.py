@@ -71,3 +71,9 @@ VILLAGERS = set([
         ('Polearm', ('weapon', 'edged'), (), False, False)
         ])
 
+
+def cardFromCardName(cardName):
+    for card in MONSTERS | HEROES | VILLAGERS:
+        if cardName == card[INDEX_NAME]:
+            return card
+
