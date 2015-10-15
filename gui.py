@@ -39,12 +39,18 @@ class ThunderstoneRandomizerGTK():
         self.monsterListStore = self._cardListStore(self.monsters)
         self.heroListStore = self._cardListStore(self.heroes)
         self.villageListStore = self._cardListStore(self.villagers)
-        self.selectionListStore = gtk.ListStore(str, bool)
+        
+        self.monsterSelectionListStore = self._emptySelectionListStore()
+        self.heroSelectionListStore = self._emptySelectionListStore()
+        self.villageSelectionListStore = self._emptySelectionListStore()
 
         self.monsterTreeView = self._cardTreeView(self.monsterListStore)
         self.heroTreeView = self._cardTreeView(self.heroListStore)
         self.villageTreeView = self._cardTreeView(self.villageListStore)
-        self.selectionTreeView = self._makeSelectionTreeView(self.selectionListStore)
+        
+        self.monsterSelectionTreeView = self._makeSelectionTreeView(self.monsterSelectionListStore, 'Monsters')
+        self.heroSelectionTreeView = self._makeSelectionTreeView(self.heroSelectionListStore, 'Heroes')
+        self.villageSelectionTreeView = self._makeSelectionTreeView(self.villageSelectionListStore, 'Villagers')
         
         self.monsterScrollableWindow.add(self.monsterTreeView)
         self.heroScrollableWindow.add(self.heroTreeView)
@@ -57,7 +63,12 @@ class ThunderstoneRandomizerGTK():
         self.selectionNotebook.append_page(
             self.villageScrollableWindow, gtk.Label('Village Cards'))
 
-        self.selectionWindow.add(self.selectionTreeView)
+        self.selectionVBox = gtk.VBox()
+        self.selectionVBox.pack_start(self.monsterSelectionTreeView)
+        self.selectionVBox.pack_start(self.heroSelectionTreeView)
+        self.selectionVBox.pack_start(self.villageSelectionTreeView)
+        
+        self.selectionWindow.add_with_viewport(self.selectionVBox)
 
         # Show the application
         self.window.show_all()
@@ -84,8 +95,14 @@ class ThunderstoneRandomizerGTK():
         
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         return listStore
+    
+    def _emptySelectionListStore(self):
+        listStore = gtk.ListStore(str, bool)
+        listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        
+        return listStore
 
-    def _makeSelectionTreeView(self, listStore):
+    def _makeSelectionTreeView(self, listStore, className):
         """
         Creates and returns a TreeStore with one name column and one checkbox column.
         """
@@ -93,7 +110,7 @@ class ThunderstoneRandomizerGTK():
         treeView = gtk.TreeView(model=listStore)
 
         renderer_text = gtk.CellRendererText()
-        column_text = gtk.TreeViewColumn('Name', renderer_text, text=0)
+        column_text = gtk.TreeViewColumn(className, renderer_text, text=0)
         column_text.set_expand(True)
 
         renderer_toggle_reshuffle = gtk.CellRendererToggle()
@@ -150,10 +167,10 @@ class ThunderstoneRandomizerGTK():
 
         return treeView
 
-    def _updateListStore(self, listStore, selection):
+    def _updateListStore(self, listStore, cardSet):
         listStore.clear()
 
-        for card in selection.m | selection.h | selection.v:
+        for card in cardSet:
             name = card[tCards.INDEX_NAME]
             listStore.append([name,  False])
 
@@ -197,7 +214,10 @@ class ThunderstoneRandomizerGTK():
         monsterSelector = tSelection.ClassSelector(forcedMonsters, bannedMonsters)
         
         selection = tSelection.getSelection(monster=monsterSelector)
-        self._updateListStore(self.selectionListStore, selection)
+        
+        self._updateListStore(self.monsterSelectionListStore, selection.m)
+        self._updateListStore(self.heroSelectionListStore, selection.h)
+        self._updateListStore(self.villageSelectionListStore, selection.v)
 
     def _isForced(self, row):
         return row[2]
