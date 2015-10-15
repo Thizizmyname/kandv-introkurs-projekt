@@ -20,11 +20,16 @@ class ThunderstoneRandomizerGTK():
         self.window = self.glade.get_object('MainWindow')
 
         self.selectionNotebook = self.glade.get_object('selectionNotebook')
-        self.selectionVBox = self.glade.get_object('selectionVBox')
+        self.selectionWindow = self.glade.get_object('selectionWindow')
 
         self.randomizeButton = self.glade.get_object('randomizeButton')
 
+        self.monsterScrollableWindow = gtk.ScrolledWindow()
+        self.monsterScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.heroScrollableWindow = gtk.ScrolledWindow()
+        self.heroScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.villageScrollableWindow = gtk.ScrolledWindow()
+        self.villageScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
         self.monsterListStore = self.cardListStore(monsters)
         self.heroListStore = self.cardListStore(heroes)
@@ -34,25 +39,29 @@ class ThunderstoneRandomizerGTK():
         self.monsterTreeView = self.cardTreeView(self.monsterListStore)
         self.heroTreeView = self.cardTreeView(self.heroListStore)
         self.villageTreeView = self.cardTreeView(self.villageListStore)
+        self.selectionTreeView = self.makeSelectionTreeView(self.selectionListStore)
         
+        self.monsterScrollableWindow.add(self.monsterTreeView)
+        self.heroScrollableWindow.add(self.heroTreeView)
         self.villageScrollableWindow.add(self.villageTreeView)
 
-        self.selectionTreeView = self.makeSelectionTreeView(self.selectionListStore)
-
         self.selectionNotebook.append_page(
-            self.monsterTreeView, gtk.Label('Monster Cards'))
+            self.monsterScrollableWindow, gtk.Label('Monster Cards'))
         self.selectionNotebook.append_page(
-            self.heroTreeView, gtk.Label('Hero Cards'))
+            self.heroScrollableWindow, gtk.Label('Hero Cards'))
         self.selectionNotebook.append_page(
             self.villageScrollableWindow, gtk.Label('Village Cards'))
 
-        reshuffleBar = self.glade.get_object('hbox2')
+        self.selectionWindow.add(self.selectionTreeView)
+
+        self.window.show_all()
+
+        """reshuffleBar = self.glade.get_object('hbox2')
 
         self.selectionVBox.remove(reshuffleBar)
         self.selectionVBox.pack_end(self.selectionTreeView)
-        self.selectionVBox.pack_end(reshuffleBar)
+        self.selectionVBox.pack_end(reshuffleBar)"""
 
-        self.window.show_all()
 
     def cardListStore(self, cards):
         listStore = gtk.ListStore(str, bool, bool, bool)

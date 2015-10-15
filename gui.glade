@@ -6,6 +6,7 @@
     <property name="can_focus">False</property>
     <property name="border_width">10</property>
     <property name="title" translatable="yes">Thunderstone Randomizer</property>
+    <property name="default_height">600</property>
     <signal name="destroy" handler="on_MainWindow_destroy" swapped="no"/>
     <child>
       <object class="GtkHBox" id="hbox1">
@@ -13,7 +14,7 @@
         <property name="can_focus">False</property>
         <property name="spacing">20</property>
         <child>
-          <object class="GtkVBox" id="vbox2">
+          <object class="GtkVBox" id="customizeVBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -123,7 +124,7 @@
                 </child>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">3</property>
               </packing>
@@ -136,10 +137,10 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="selectionVBox">
+          <object class="GtkVBox" id="selectCardVBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">30</property>
+            <property name="spacing">37</property>
             <child>
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
@@ -156,7 +157,20 @@
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkScrolledWindow" id="selectionWindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">never</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
             <child>
               <object class="GtkHBox" id="hbox2">
