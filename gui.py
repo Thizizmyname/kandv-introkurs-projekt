@@ -21,6 +21,8 @@ class ThunderstoneRandomizerGTK():
 
         self.selectionNotebook = self.glade.get_object('selectionNotebook')
 
+        self.villageScrollableWindow = gtk.ScrolledWindow()
+
         self.monsterListStore = self.cardListStore(monsters)
         self.heroListStore = self.cardListStore(heroes)
         self.villageListStore = self.cardListStore(villagers)
@@ -28,13 +30,15 @@ class ThunderstoneRandomizerGTK():
         self.monsterTreeView = self.cardTreeView(self.monsterListStore)
         self.heroTreeView = self.cardTreeView(self.heroListStore)
         self.villageTreeView = self.cardTreeView(self.villageListStore)
+        
+        self.villageScrollableWindow.add(self.villageTreeView)
 
         self.selectionNotebook.append_page(
             self.monsterTreeView, gtk.Label('Monster Cards'))
         self.selectionNotebook.append_page(
             self.heroTreeView, gtk.Label('Hero Cards'))
         self.selectionNotebook.append_page(
-            self.villageTreeView, gtk.Label('Village Cards'))
+            self.villageScrollableWindow, gtk.Label('Village Cards'))
 
         self.window.show_all()
 
