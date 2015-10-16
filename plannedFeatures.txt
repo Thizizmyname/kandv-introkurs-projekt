@@ -1,0 +1,3 @@
+Knappar skall göras inaktiva om för många bannade
+Valfri verifikation
+
