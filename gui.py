@@ -28,18 +28,21 @@ class ThunderstoneRandomizerGTK():
         self.selectionWindow = self.glade.get_object('selectionWindow')
 
         self.monsterScrollableWindow = gtk.ScrolledWindow()
-        self.monsterScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.monsterScrollableWindow.set_policy(
+            gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
         self.heroScrollableWindow = gtk.ScrolledWindow()
-        self.heroScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.heroScrollableWindow.set_policy(
+            gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
         self.villageScrollableWindow = gtk.ScrolledWindow()
-        self.villageScrollableWindow.set_policy (gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.villageScrollableWindow.set_policy(
+            gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 
         self.monsterListStore = self._cardListStore(self.monsters)
         self.heroListStore = self._cardListStore(self.heroes)
         self.villageListStore = self._cardListStore(self.villagers)
-        
+
         self.monsterSelectionListStore = self._emptySelectionListStore()
         self.heroSelectionListStore = self._emptySelectionListStore()
         self.villageSelectionListStore = self._emptySelectionListStore()
@@ -47,11 +50,14 @@ class ThunderstoneRandomizerGTK():
         self.monsterTreeView = self._cardTreeView(self.monsterListStore)
         self.heroTreeView = self._cardTreeView(self.heroListStore)
         self.villageTreeView = self._cardTreeView(self.villageListStore)
-        
-        self.monsterSelectionTreeView = self._makeSelectionTreeView(self.monsterSelectionListStore, 'Monsters')
-        self.heroSelectionTreeView = self._makeSelectionTreeView(self.heroSelectionListStore, 'Heroes')
-        self.villageSelectionTreeView = self._makeSelectionTreeView(self.villageSelectionListStore, 'Villagers')
-        
+
+        self.monsterSelectionTreeView = self._makeSelectionTreeView(
+            self.monsterSelectionListStore, 'Monsters')
+        self.heroSelectionTreeView = self._makeSelectionTreeView(
+            self.heroSelectionListStore, 'Heroes')
+        self.villageSelectionTreeView = self._makeSelectionTreeView(
+            self.villageSelectionListStore, 'Villagers')
+
         self.monsterScrollableWindow.add(self.monsterTreeView)
         self.heroScrollableWindow.add(self.heroTreeView)
         self.villageScrollableWindow.add(self.villageTreeView)
@@ -67,7 +73,7 @@ class ThunderstoneRandomizerGTK():
         self.selectionVBox.pack_start(self.monsterSelectionTreeView)
         self.selectionVBox.pack_start(self.heroSelectionTreeView)
         self.selectionVBox.pack_start(self.villageSelectionTreeView)
-        
+
         self.selectionWindow.add_with_viewport(self.selectionVBox)
 
         # Show the application
@@ -80,10 +86,10 @@ class ThunderstoneRandomizerGTK():
         self.selectionVBox.pack_end(self.selectionTreeView)
         self.selectionVBox.pack_end(reshuffleBar)"""
 
-
     def _cardListStore(self, cards):
         """
-        Creates and returns a listStore containing the card names and three bools
+        Creates and returns a listStore containing the card names and
+        three bools
         """
 
         listStore = gtk.ListStore(str, bool, bool, bool)
@@ -92,19 +98,20 @@ class ThunderstoneRandomizerGTK():
             name = card[tCards.INDEX_NAME]
             row = [name, True, False, False]
             listStore.append(row)
-        
+
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
         return listStore
-    
+
     def _emptySelectionListStore(self):
         listStore = gtk.ListStore(str, bool)
         listStore.set_sort_column_id(0, gtk.SORT_ASCENDING)
-        
+
         return listStore
 
     def _makeSelectionTreeView(self, listStore, className):
         """
-        Creates and returns a TreeStore with one name column and one checkbox column.
+        Creates and returns a TreeStore with one name column
+        and one checkbox column.
         """
 
         treeView = gtk.TreeView(model=listStore)
@@ -127,7 +134,8 @@ class ThunderstoneRandomizerGTK():
 
     def _cardTreeView(self, listStore):
         """
-        Creates and returns a treeView with a name column and three radio buttons.
+        Creates and returns a treeView with a name column
+        and three radio buttons.
         """
 
         treeView = gtk.TreeView(model=listStore)
@@ -216,15 +224,12 @@ class ThunderstoneRandomizerGTK():
         heroSelector = self._getCustomizationSelector(self.heroListStore)
         villageSelector = self._getCustomizationSelector(self.villageListStore)
 
-        selection = tSelection.getSelection(monster=monsterSelector, hero=heroSelector, village=villageSelector)
-
-        self._updateListStore(self.monsterSelectionListStore, selection.m)
-        self._updateListStore(self.heroSelectionListStore, selection.h)
-        self._updateListStore(self.villageSelectionListStore, selection.v)
+        self._updateSelectionListStores(
+            monsterSelector, heroSelector, villageSelector)
 
     def _isForced(self, row):
         return row[2]
-        
+
     def _isBanned(self, row):
         return row[3]
 
@@ -232,7 +237,46 @@ class ThunderstoneRandomizerGTK():
         listStore[path][1] = not listStore[path][1]
 
     def on_reshuffleButton_clicked(self, widget, data=None):
-        pass
+
+        monsterSelector = self._getReshuffleSelector(
+            self.monsterSelectionListStore)
+        heroSelector = self._getReshuffleSelector(self.heroSelectionListStore)
+        villageSelector = self._getReshuffleSelector(
+            self.villageSelectionListStore)
+
+        self._updateSelectionListStores(
+            monsterSelector, heroSelector, villageSelector)
+
+    def _updateSelectionListStores(self,
+                                   monsterSelector,
+                                   heroSelector,
+                                   villageSelector):
+
+        selection = tSelection.getSelection(
+            monster=monsterSelector,
+            hero=heroSelector,
+            village=villageSelector)
+
+        self._updateListStore(self.monsterSelectionListStore, selection.m)
+        self._updateListStore(self.heroSelectionListStore, selection.h)
+        self._updateListStore(self.villageSelectionListStore, selection.v)
+
+    def _getReshuffleSelector(self, listStore):
+
+        keep = []
+
+        for row in listStore:
+            if not self._reshuffle(row):
+                card = tCards.cardFromCardName(row[0])
+                keep.append(card)
+
+        keep = set(keep)
+
+        selector = tSelection.ClassSelector(keep, set())
+        return selector
+
+    def _reshuffle(self, row):
+        return row[1]
 
 
 def main():
