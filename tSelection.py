@@ -19,18 +19,18 @@ class VillageBannedException(Exception):
 
 
 class ClassSelector(object):
-    
+
     """selector for forced or blacklisted cards"""
-    
+
     def __init__(self, whitelist, blacklist):
         """
         :whitelist: through gui-defined cards that is wanted in selection
         :blacklist: through gui-defined cards that is excluded from selection
         """
-        
+
         self.whitelist = whitelist
         self.blacklist = blacklist
-        
+
 
 class Selection(object):
 
@@ -112,6 +112,7 @@ def selectionHelper(subset, superset, length):
 def getSelection(monster=EMPTY_SELECTOR,
                  hero=EMPTY_SELECTOR,
                  village=EMPTY_SELECTOR,
+                 validate=True,
                  maxTries=MAX_TRIES):
     """
     Generate a random selection according to the rules
@@ -173,6 +174,9 @@ def getSelection(monster=EMPTY_SELECTOR,
 
         # Exit if too many tries are needed
         if counter >= maxTries:
+            break
+
+        if not validate:
             break
 
     return selection

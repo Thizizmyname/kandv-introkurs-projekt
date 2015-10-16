@@ -2,7 +2,9 @@ import gtk
 import gtk.glade
 import tCards
 import tSelection
-from tSelection import MonsterBannedException, HeroBannedException, VillageBannedException
+from tSelection import MonsterBannedException, \
+                       HeroBannedException, \
+                       VillageBannedException
 
 
 class ThunderstoneRandomizerGTK():
@@ -78,6 +80,8 @@ class ThunderstoneRandomizerGTK():
         self.selectionWindow.add_with_viewport(self.selectionVBox)
 
         self.errorLabel = self.glade.get_object('errorLabel')
+
+        self.validateCheckbox = self.glade.get_object('validateCheckbox')
 
         # Show the application
         self.window.show_all()
@@ -268,7 +272,8 @@ class ThunderstoneRandomizerGTK():
         selection = tSelection.getSelection(
             monster=monsterSelector,
             hero=heroSelector,
-            village=villageSelector)
+            village=villageSelector,
+            validate=self.validateCheckbox.get_active())
 
         self._updateListStore(self.monsterSelectionListStore, selection.m)
         self._updateListStore(self.heroSelectionListStore, selection.h)
