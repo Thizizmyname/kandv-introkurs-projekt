@@ -2,6 +2,7 @@ import gtk
 import gtk.glade
 import tCards
 import tSelection
+from tSelection import MonsterBannedException, HeroBannedException, VillageBannedException
 
 
 class ThunderstoneRandomizerGTK():
@@ -75,6 +76,8 @@ class ThunderstoneRandomizerGTK():
         self.selectionVBox.pack_start(self.villageSelectionTreeView)
 
         self.selectionWindow.add_with_viewport(self.selectionVBox)
+
+        self.errorLabel = self.glade.get_object('errorLabel')
 
         # Show the application
         self.window.show_all()
@@ -220,12 +223,22 @@ class ThunderstoneRandomizerGTK():
 
     def on_randomize(self, widget, data=None):
 
+        self.errorLabel.set_text('')
+
         monsterSelector = self._getCustomizationSelector(self.monsterListStore)
         heroSelector = self._getCustomizationSelector(self.heroListStore)
         villageSelector = self._getCustomizationSelector(self.villageListStore)
 
-        self._updateSelectionListStores(
-            monsterSelector, heroSelector, villageSelector)
+        try:
+
+            self._updateSelectionListStores(
+                monsterSelector, heroSelector, villageSelector)
+
+        except (MonsterBannedException,
+                HeroBannedException,
+                VillageBannedException) as e:
+
+            self.errorLabel.set_text(e.message)
 
     def _isForced(self, row):
         return row[2]

@@ -6,6 +6,18 @@ import random
 import tCards
 
 
+class MonsterBannedException(Exception):
+    pass
+
+
+class HeroBannedException(Exception):
+    pass
+
+
+class VillageBannedException(Exception):
+    pass
+
+
 class ClassSelector(object):
     
     """selector for forced or blacklisted cards"""
@@ -114,11 +126,26 @@ def getSelection(monster=EMPTY_SELECTOR,
     allowedMonsters = tCards.MONSTERS - monster.blacklist
     preferredMonsters = monster.whitelist
 
+    if len(allowedMonsters) < tCards.MONSTER_AMOUNT:
+        raise MonsterBannedException(
+                'Too many banned monsters!\nYou need at least ' +
+                str(tCards.MONSTER_AMOUNT) + ' allowed cards.')
+
     allowedHeroes = tCards.HEROES - hero.blacklist
     preferredHeroes = hero.whitelist
 
+    if len(allowedHeroes) < tCards.HERO_AMOUNT:
+        raise HeroBannedException(
+                'Too many banned heroes!\nYou need at least ' +
+                str(tCards.HERO_AMOUNT) + ' allowed cards.')
+
     allowedVillagers = tCards.VILLAGERS - village.blacklist
     preferredVillagers = village.whitelist
+
+    if len(allowedVillagers) < tCards.VILLAGE_AMOUNT:
+        raise VillageBannedException(
+                'Too many banned villagers!\nYou need at least ' +
+                str(tCards.VILLAGE_AMOUNT) + ' allowed cards.')
 
     # Randomly generate selections until a valid selection is found
     # Maximum of maxTries tries
