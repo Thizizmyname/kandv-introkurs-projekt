@@ -99,7 +99,7 @@ def selectionHelper(subset, superset, length):
 
 def getSelection(monster=EMPTY_SELECTOR,
                  hero=EMPTY_SELECTOR,
-                 villager=EMPTY_SELECTOR,
+                 village=EMPTY_SELECTOR,
                  maxTries=MAX_TRIES):
     """
     Generate a random selection according to the rules
@@ -117,8 +117,8 @@ def getSelection(monster=EMPTY_SELECTOR,
     allowedHeroes = tCards.HEROES - hero.blacklist
     preferredHeroes = hero.whitelist
 
-    allowedVillagers = tCards.VILLAGERS - villager.blacklist
-    preferredVillagers = villager.whitelist
+    allowedVillagers = tCards.VILLAGERS - village.blacklist
+    preferredVillagers = village.whitelist
 
     # Randomly generate selections until a valid selection is found
     # Maximum of maxTries tries

@@ -192,29 +192,32 @@ class ThunderstoneRandomizerGTK():
         listStore[path][2] = False
         listStore[path][3] = True
 
-    def on_randomize(self, widget, data=None):
-        
-        forcedMonsters = []
-        bannedMonsters = []
-        
-        
-        for row in self.monsterListStore:
+    def _getCustomizationSelector(self, listStore):
+        forced = []
+        banned = []
+
+        for row in listStore:
             if self._isForced(row):
                 card = tCards.cardFromCardName(row[0])
-                forcedMonsters.append(card)
+                forced.append(card)
             if self._isBanned(row):
                 card = tCards.cardFromCardName(row[0])
-                bannedMonsters.append(card)
-        
-        forcedMonsters = set(forcedMonsters)
-        bannedMonsters = set(bannedMonsters)
-        
-        assert len(bannedMonsters) <= len(self.monsters) - tCards.MONSTER_AMOUNT
-        
-        monsterSelector = tSelection.ClassSelector(forcedMonsters, bannedMonsters)
-        
-        selection = tSelection.getSelection(monster=monsterSelector)
-        
+                banned.append(card)
+
+        forced = set(forced)
+        banned = set(banned)
+
+        selector = tSelection.ClassSelector(forced, banned)
+        return selector
+
+    def on_randomize(self, widget, data=None):
+
+        monsterSelector = self._getCustomizationSelector(self.monsterListStore)
+        heroSelector = self._getCustomizationSelector(self.heroListStore)
+        villageSelector = self._getCustomizationSelector(self.villageListStore)
+
+        selection = tSelection.getSelection(monster=monsterSelector, hero=heroSelector, village=villageSelector)
+
         self._updateListStore(self.monsterSelectionListStore, selection.m)
         self._updateListStore(self.heroSelectionListStore, selection.h)
         self._updateListStore(self.villageSelectionListStore, selection.v)
