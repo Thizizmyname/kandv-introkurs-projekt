@@ -27,7 +27,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="padding">5</property>
+                <property name="padding">10</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -61,19 +61,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHSeparator" id="hseparator1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="padding">30</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkHBox" id="hbox3">
+                <property name="height_request">70</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -115,7 +104,6 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="padding">10</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
@@ -139,7 +127,8 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">3</property>
+                <property name="padding">5</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -153,19 +142,33 @@
           <object class="GtkVBox" id="selectCardVBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">37</property>
             <child>
-              <object class="GtkLabel" id="label1">
+              <object class="GtkVBox" id="vbox2">
+                <property name="height_request">59</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Selected cards:&lt;/b&gt;&lt;/big&gt;</property>
-                <property name="use_markup">True</property>
-                <property name="justify">center</property>
+                <child>
+                  <object class="GtkLabel" id="label1">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">&lt;big&gt;&lt;b&gt;Selected cards&lt;/b&gt;&lt;/big&gt;</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">center</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="padding">10</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="padding">5</property>
+                <property name="fill">True</property>
                 <property name="position">0</property>
               </packing>
             </child>
@@ -187,16 +190,32 @@
             </child>
             <child>
               <object class="GtkHBox" id="hbox2">
+                <property name="height_request">70</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkButton" id="reshuffleButton">
-                    <property name="label" translatable="yes">Reshuffle</property>
+                  <object class="GtkVBox" id="vbox1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="border_width">10</property>
-                    <signal name="clicked" handler="on_reshuffleButton_clicked" swapped="no"/>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="reshuffleButton">
+                        <property name="label" translatable="yes">Reshuffle selected</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="border_width">10</property>
+                        <signal name="clicked" handler="on_reshuffleButton_clicked" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -205,21 +224,13 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="label2">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Check individual cards to reshuffle</property>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
+                  <placeholder/>
                 </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
+                <property name="padding">5</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -227,7 +238,19 @@
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
+            <property name="pack_type">end</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVSeparator" id="vseparator1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>
