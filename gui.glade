@@ -116,6 +116,9 @@
                     <property name="justify">center</property>
                     <property name="wrap">True</property>
                     <property name="ellipsize">end</property>
+                    <attributes>
+                      <attribute name="foreground" value="#ffff3edc3edc"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="expand">True</property>
