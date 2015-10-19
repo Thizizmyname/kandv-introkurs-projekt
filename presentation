@@ -1,0 +1,43 @@
+1
+    Thunderstone är ett kortspel. Spelet går ut på att bygga upp sin lek med olika användbara kort.
+    Korten som kan köpas slumpas fram innan spelet startar.
+    3 av 8 Monstertyper, 4 av 11 herotyper, 8 av 19 villagekort.
+    Vissa kort fungerar bättre om andra kort samtidigt är med.
+    Hur kan vi slumpa fram kort på ett bra sätt?
+
+2
+    Slumpning med eller utan verifikation.
+    Slumpning med villkor.
+    Slumplning med omöjliga villkor.
+    Reshuffle.
+    Layout under skalning.
+
+3
+    Motor och grafik.
+    Vi använder ca 40 funktioner med enklare och mer specialiserade syften.
+
+4
+    Kort lagras som 5-tuplar med kornamn och relevent information.
+    Ett urval av kort representeras med en klass. Den lagrar kort och innehåller valideringslogik.
+    Ett urvalskriterium representeras med en klass. Lagrar bannade och önskade kort.
+    Layouten lagras som en XML-fil.
+    Tabellerna renderar modeller, som är listor av kortnamn.
+
+5
+    Urval. Givet en mängd möjliga monster-, hero- och village-kort och kriterium över dessa.
+    Till varje klass väljs först, om möjligt, alla önskade kort. Sedan slumpas ur de tillåtna till vi har rätt antal.
+    Efteråt undersöks alla krav, och om något inte är uppfyllt slumpas en nytt urval.
+    Korten innehåller både krav, och indirekt vilka krav de uppfyller.
+    Layouten innehåller viss logik för interaktion.
+
+6
+    Visa getSelection(), validate() och depChk().
+    Visa Glade, XML.
+    
+7
+    Programbibliotek finns i många och inte nödvändigtvis kompatibla versioner.
+    GTK är ett moget och inte helt svåranvänt gränsnittsramverk.
+    Glade är guds gåva till nybörjare.
+    Klasser kan användas till mer än man tror, inte bara för lagring.
+    Git (och GitHub) fungerar utmärkt när man sammarbetar med kod.
+    Man kan lätt skapa egna pythonmoduler för att organisera kod.  
