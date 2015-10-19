@@ -49,10 +49,10 @@ breaklines=true
 \setbeamertemplate{items}[circle]
 \mode<presentation>
 
-\title[Thundersone urval]{Kontrollerat slumpurval av kort för brädspelet Thunderstone}
+\title[Thundersone urval]{GUI för kontrollerat slumpurval av kort för brädspelet Thunderstone}
 \author[P. Engström, A. Remmers]{Per Engström \& Alexis Remmers \\[0.5cm] 
 \normalsize \emph{Projekt} \\
-\normalsize \emph{Introduktion till informationsteknologi}}
+\normalsize \emph{Introduktion till informationsteknologi, 10hp}}
 
 \begin{document}
 
@@ -118,23 +118,32 @@ breaklines=true
     \frametitle{Söndra och härska}
     \framesubtitle{Red Alert}
     
-    \begin{itemize}
-        \item Grafik
-         \begin{itemize}
-             \item GTK
-             \item Glade
-            \end{itemize}
-        \item Motor (ca 40 funktioner)
-        \begin{itemize}
-            \item Lagring av kort
-            \item Skapa urvalspreferenser
-            \item Korrekt urval givet preferenser
-            \begin{itemize}
-                \item Kontrollera krav
-            \end{itemize}
-            \item Implementering av \textsc{gui}
-        \end{itemize}
-    \end{itemize}
+   
+    
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+             \begin{itemize}
+                 \item Motor (ca 40 funktioner)
+                 \begin{itemize}
+                     \item Lagring av kort
+                     \item Skapa urvalspreferenser
+                     \item Korrekt urval givet preferenser
+                     \begin{itemize}
+                         \item Kontrollera krav
+                        \end{itemize}
+                        \item Implementering av \textsc{gui}
+                    \end{itemize}
+                    \item Grafik
+                    \begin{itemize}
+                        \item GTK
+                        \item Glade
+                    \end{itemize}
+                \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\textwidth]{ra2.jpg}
+        \end{column}
+    \end{columns}
 
 \end{frame}
 
@@ -254,7 +263,7 @@ breaklines=true
         \pause
         \item Klasser kan användas till mer än man tror, inte bara för lagring
         \pause
-        \item Git (och GitHub) fungerar utmärkt när man sammarbetar med kod
+        \item Git (och GitHub) fungerar utmärkt när man samarbetar med kod
         \pause
         \item Man kan lätt dela upp koden i filer för att organisera sin kod
     \end{itemize}
