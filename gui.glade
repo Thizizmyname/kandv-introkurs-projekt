@@ -111,11 +111,11 @@
                   <object class="GtkLabel" id="errorLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="xpad">5</property>
+                    <property name="ypad">5</property>
                     <property name="justify">center</property>
+                    <property name="wrap">True</property>
                     <property name="ellipsize">end</property>
-                    <attributes>
-                      <attribute name="foreground" value="#ffff536e536e"/>
-                    </attributes>
                   </object>
                   <packing>
                     <property name="expand">True</property>
@@ -144,7 +144,7 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkVBox" id="vbox2">
-                <property name="height_request">59</property>
+                <property name="height_request">67</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
