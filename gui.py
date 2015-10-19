@@ -86,13 +86,6 @@ class ThunderstoneRandomizerGTK():
         # Show the application
         self.window.show_all()
 
-        """reshuffleBar = self.glade.get_object('hbox2')
-
-        # Insert selection tree
-        self.selectionVBox.remove(reshuffleBar)
-        self.selectionVBox.pack_end(self.selectionTreeView)
-        self.selectionVBox.pack_end(reshuffleBar)"""
-
     def _cardListStore(self, cards):
         """
         Creates and returns a listStore containing the card names and
@@ -274,6 +267,11 @@ class ThunderstoneRandomizerGTK():
             hero=heroSelector,
             village=villageSelector,
             validate=self.validateCheckbox.get_active())
+
+        if not selection.validate():
+            self.errorLabel.set_text(
+                    'Selection dependencies could not be validated!' + '\n' +
+                    'Please change your preferences and try again.')
 
         self._updateListStore(self.monsterSelectionListStore, selection.m)
         self._updateListStore(self.heroSelectionListStore, selection.h)
